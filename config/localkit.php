@@ -1,5 +1,11 @@
 <?php
 
+$retention = [
+    'activity_days' => (int) env('LOCALKIT_ACTIVITY_RETENTION_DAYS', 30),
+    'media_days' => (int) env('LOCALKIT_MEDIA_RETENTION_DAYS', 7),
+];
+$retention['compilation_days'] = (int) env('LOCALKIT_COMPILATION_RETENTION_DAYS', $retention['media_days']);
+
 return [
     'firmware_proxy' => env('LOCALKIT_FIRMWARE_PROXY', false),
     'ota_repository' => env('OTA_REPOSITORY', 'https://tool.localkit.io'),
@@ -16,10 +22,7 @@ return [
     | row is tiny.
     |
     */
-    'retention' => [
-        'activity_days' => (int) env('LOCALKIT_ACTIVITY_RETENTION_DAYS', 30),
-        'media_days' => (int) env('LOCALKIT_MEDIA_RETENTION_DAYS', 7),
-    ],
+    'retention' => $retention,
 
     /*
     |--------------------------------------------------------------------------

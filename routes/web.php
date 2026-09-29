@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ActivitiesTimelapseController;
+use App\Http\Controllers\ActivitiesVideoCompilationController;
 use App\Http\Controllers\CameraThumbnailController;
 use App\Http\Controllers\LogDownloadController;
 use App\Http\Controllers\MediaDownloadController;
@@ -32,6 +34,21 @@ Route::get('media/download/{path}', MediaDownloadController::class)
 Route::get('media/file/{fileId}', MediaFileController::class)
     ->middleware('auth')
     ->name('media.file');
+
+// Animated GIF timelapse compiled from filtered camera capture screenshots.
+Route::get('activities/timelapse.gif', ActivitiesTimelapseController::class)
+    ->middleware('auth')
+    ->name('activities.timelapse');
+
+// Progress check endpoint for the MP4 video reel compilation.
+Route::get('activities/video-compilation/progress', [ActivitiesVideoCompilationController::class, 'progress'])
+    ->middleware('auth')
+    ->name('activities.video-compilation.progress');
+
+// MP4 video compilation stitched from filtered camera capture videos.
+Route::get('activities/video-compilation.mp4', ActivitiesVideoCompilationController::class)
+    ->middleware('auth')
+    ->name('activities.video-compilation');
 
 // Cached still-frame thumbnail (ffmpeg) for a device's camera stream.
 Route::get('camera/{device}/thumbnail/{stream?}', CameraThumbnailController::class)

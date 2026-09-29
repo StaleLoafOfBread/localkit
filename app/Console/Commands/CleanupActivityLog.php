@@ -41,15 +41,29 @@ class CleanupActivityLog extends Command
     {
         $activityDays = (int) config('localkit.retention.activity_days');
         $mediaDays = (int) config('localkit.retention.media_days');
+        $compilationDays = (int) config('localkit.retention.compilation_days');
 
         $mediaCutoff = now()->subDays($mediaDays);
         $activityCutoff = now()->subDays($activityDays);
+        $compilationCutoff = now()->subDays($compilationDays)->getTimestamp();
 
         $staleMedia = MediaFile::where('created_at', '<', $mediaCutoff)->get();
         $historyQuery = History::where('created_at', '<', $activityCutoff);
         $historyCount = $historyQuery->count();
 
-        if ($staleMedia->isEmpty() && $historyCount === 0) {
+        $disk = Storage::disk(MediaPage::DISK);
+        $staleCompilations = [];
+
+        foreach (['compilations/reels', 'compilations/timelapses'] as $prefix) {
+            $files = $disk->files($prefix);
+            foreach ($files as $file) {
+                if ($disk->lastModified($file) < $compilationCutoff) {
+                    $staleCompilations[] = $file;
+                }
+            }
+        }
+
+        if ($staleMedia->isEmpty() && $historyCount === 0 && empty($staleCompilations)) {
             $this->info('Nothing to clean up.');
 
             return self::SUCCESS;
@@ -67,6 +81,11 @@ class CleanupActivityLog extends Command
             $activityCutoff->toDateString(),
             $historyCount,
         ));
+        $this->info(sprintf(
+            'Compilations older than %d day(s): %d file(s)',
+            $compilationDays,
+            count($staleCompilations),
+        ));
 
         if ($this->option('dry-run')) {
             $this->info('Dry run - nothing deleted.');
@@ -75,14 +94,13 @@ class CleanupActivityLog extends Command
         }
 
         if (! $this->option('force') && ! $this->confirm(sprintf(
-            'Delete %d media file(s) and %d activity log entrie(s)? This cannot be undone.',
+            'Delete %d media file(s), %d activity log entrie(s), and %d compilation(s)? This cannot be undone.',
             $staleMedia->count(),
             $historyCount,
+            count($staleCompilations),
         ))) {
             return self::SUCCESS;
         }
-
-        $disk = Storage::disk(MediaPage::DISK);
 
         foreach ($staleMedia as $media) {
             $disk->delete($media->object_key);
@@ -90,12 +108,17 @@ class CleanupActivityLog extends Command
             $media->delete();
         }
 
+        foreach ($staleCompilations as $compilationFile) {
+            $disk->delete($compilationFile);
+        }
+
         $historyQuery->delete();
 
         $this->info(sprintf(
-            'Deleted %d media file(s) and %d activity log entrie(s).',
+            'Deleted %d media file(s), %d activity log entrie(s), and %d compilation(s).',
             $staleMedia->count(),
             $historyCount,
+            count($staleCompilations),
         ));
 
         return self::SUCCESS;
