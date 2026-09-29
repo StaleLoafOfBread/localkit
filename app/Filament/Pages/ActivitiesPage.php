@@ -186,4 +186,11 @@ class ActivitiesPage extends Page
         );
     }
 
+    /**
+     * Builds the target URL to navigate to the Timeline Scrubber page preserving all active filters.
+     */
+    public function getTimelinePageUrl(): string
+    {
+        return TimelinePage::getUrl($this->getActivityFilterQueryParams());
+    }
 }

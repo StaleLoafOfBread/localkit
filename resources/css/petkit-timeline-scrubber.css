@@ -1,0 +1,886 @@
+/* ==========================================================================
+   Petkit Timeline Scrubber Stylesheet (Security Camera / NVR Style)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Main Stage & Viewport Container
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-stage {
+    position: relative;
+    width: 100%;
+    background: #090d16;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    color: #f3f4f6;
+    user-select: none;
+}
+
+.petkit-scrubber-stage:fullscreen {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #000000 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Media & Info Viewport (16:9 Screen)
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 65vh;
+    background: radial-gradient(circle at center, #151c2e 0%, #080b12 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.petkit-scrubber-stage:fullscreen .petkit-scrubber-viewport {
+    flex: 1;
+    max-height: calc(100vh - 180px);
+    aspect-ratio: auto;
+}
+
+.petkit-scrubber-media {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000000;
+    cursor: pointer;
+}
+
+/* Hide native browser controls across all engines */
+.petkit-scrubber-media::-webkit-media-controls {
+    display: none !important;
+}
+
+.petkit-scrubber-media::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
+.petkit-scrubber-media::-webkit-media-controls-panel {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Non-Media Event Info Bubble / Card
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-infocard-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    background: radial-gradient(circle at center, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%);
+}
+
+.petkit-scrubber-infocard {
+    position: relative;
+    max-width: 32rem;
+    width: 100%;
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(16px);
+    border-radius: 1rem;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 0 40px -10px var(--event-glow, rgba(59, 130, 246, 0.3));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: petkitInfocardFade 0.25s ease-out;
+}
+
+@keyframes petkitInfocardFade {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.petkit-scrubber-infocard__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.petkit-scrubber-infocard__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--event-bg, rgba(59, 130, 246, 0.15));
+    color: var(--event-color, #60a5fa);
+    box-shadow: inset 0 0 12px var(--event-glow, rgba(59, 130, 246, 0.2));
+}
+
+.petkit-scrubber-infocard__icon svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.petkit-scrubber-infocard__titles {
+    flex: 1;
+    min-width: 0;
+}
+
+.petkit-scrubber-infocard__type-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--event-color, #93c5fd);
+    margin-bottom: 0.25rem;
+}
+
+.petkit-scrubber-infocard__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.petkit-scrubber-infocard__tags {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.petkit-scrubber-infocard__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.petkit-scrubber-infocard__tag svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    opacity: 0.8;
+}
+
+.petkit-scrubber-infocard__message {
+    font-size: 0.9375rem;
+    color: #d1d5db;
+    line-height: 1.5;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--event-color, #3b82f6);
+}
+
+.petkit-scrubber-infocard__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+    color: #9ca3af;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. Viewport HUD Overlays (Security Camera Timestamp & Badges)
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-hud {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.petkit-scrubber-hud--top-left {
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.petkit-scrubber-hud--top-right {
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: auto;
+}
+
+/* Stage Top Header Bar (Unobstructed Metadata & Actions above viewport) */
+.petkit-scrubber-stage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    background: #0d121f;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    min-height: 48px;
+    z-index: 10;
+}
+
+.petkit-scrubber-header-datetime {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 0.375rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.petkit-scrubber-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.375rem;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f9fafb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.petkit-scrubber-badge--live {
+    background: rgba(16, 185, 129, 0.9);
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+    animation: petkitPulse 2s infinite;
+}
+
+@keyframes petkitPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.petkit-scrubber-hud-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e5e7eb;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.petkit-scrubber-hud-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.petkit-scrubber-hud-btn svg {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.petkit-scrubber-osd-time {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.petkit-scrubber-osd-sub {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+/* --------------------------------------------------------------------------
+   5. Transport Controls Bar
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    background: #0f172a;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.petkit-scrubber-controls-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.petkit-scrubber-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.petkit-scrubber-btn:hover:not(:disabled) {
+    background: #334155;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.petkit-scrubber-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.petkit-scrubber-btn--primary {
+    background: #2563eb;
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+.petkit-scrubber-btn--primary:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.petkit-scrubber-btn--active {
+    background: #3b82f6;
+    border-color: #60a5fa;
+    color: #ffffff;
+}
+
+.petkit-scrubber-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Segmented Control Pill Group (Speed & Mode) */
+.petkit-scrubber-segmented {
+    display: flex;
+    align-items: center;
+    background: #090d16;
+    border-radius: 0.375rem;
+    padding: 0.125rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    gap: 0.125rem;
+}
+
+/* Current Playhead Date & Time in the Transport Bar */
+.petkit-scrubber-transport-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    background: #090d16;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 0.375rem;
+    color: #f87171;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: ui-monospace, monospace;
+    white-space: nowrap;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.petkit-scrubber-transport-time__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ef4444;
+    box-shadow: 0 0 6px #ef4444;
+    animation: petkit-pulse 2s infinite ease-in-out;
+}
+
+.petkit-scrubber-segmented-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #94a3b8;
+    background: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.petkit-scrubber-segmented-btn:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.petkit-scrubber-segmented-btn--active {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   6. Horizontal Timeline Scrubber Tape
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-tape-container {
+    position: relative;
+    width: 100%;
+    height: 116px;
+    background: #0b0f19;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.petkit-scrubber-tape-container:active,
+.petkit-scrubber-tape-container--dragging {
+    cursor: grabbing;
+}
+
+.petkit-scrubber-tape {
+    position: relative;
+    height: 100%;
+    min-width: 100%;
+    flex-shrink: 0;
+    background-size: 80px 100%;
+}
+
+.petkit-scrubber-tape::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+/* Playhead (Vertical Red Needle behind Event Pins) */
+.petkit-scrubber-playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ef4444;
+    box-shadow: 0 0 8px #ef4444, 0 0 16px rgba(239, 68, 68, 0.5);
+    z-index: 8;
+    pointer-events: none;
+    transform: translateX(-50%);
+}
+
+.petkit-scrubber-playhead::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 7px;
+    background: #ef4444;
+    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.petkit-scrubber-playhead::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 7px;
+    background: #ef4444;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* Time Graduation Ticks & Labels */
+.petkit-scrubber-tick {
+    position: absolute;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
+.petkit-scrubber-tick--major {
+    height: 28px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.petkit-scrubber-tick--minor {
+    height: 14px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.petkit-scrubber-tick-label {
+    position: absolute;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #94a3b8;
+    pointer-events: none;
+    white-space: nowrap;
+    font-family: ui-monospace, monospace;
+}
+
+.petkit-scrubber-date-boundary {
+    position: absolute;
+    top: 4px;
+    transform: translateX(-50%);
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #f8fafc;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 5;
+}
+
+/* Event Marker Pins & Activity Bars (Alternating Above & Below Center Axis) */
+.petkit-scrubber-event-marker {
+    position: absolute;
+    transform: translateX(-50%);
+    cursor: pointer;
+    z-index: 12;
+    transition: transform 0.1s ease, z-index 0.1s ease;
+    display: flex;
+    align-items: center;
+}
+
+.petkit-scrubber-event-marker--top {
+    top: 6px;
+    bottom: auto;
+    flex-direction: column;
+}
+
+.petkit-scrubber-event-marker--bottom {
+    top: auto;
+    bottom: 6px;
+    flex-direction: column-reverse;
+}
+
+.petkit-scrubber-event-marker:hover {
+    transform: translateX(-50%) scale(1.25);
+    z-index: 25;
+}
+
+.petkit-scrubber-event-marker--active {
+    transform: translateX(-50%) scale(1.35);
+    z-index: 30;
+}
+
+.petkit-scrubber-event-pin {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.petkit-scrubber-event-pin svg {
+    width: 12px;
+    height: 12px;
+}
+
+.petkit-scrubber-event-pin__media-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 1.5px solid #000000;
+}
+
+.petkit-scrubber-event-marker__stem {
+    width: 2px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+.petkit-scrubber-event-marker--active .petkit-scrubber-event-marker__stem {
+    background: #ffffff;
+    box-shadow: 0 0 6px #ffffff;
+}
+
+/* Floating Hover Preview Card (Floats above timeline tape, z-index: 100) */
+.petkit-scrubber-hover-preview {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    z-index: 100;
+    pointer-events: none;
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 190px;
+    max-width: 250px;
+    animation: petkitPreviewPop 0.15s ease-out;
+}
+
+@keyframes petkitPreviewPop {
+    from {
+        opacity: 0;
+        transform: translate(-50%, calc(-100% + 6px)) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -100%) scale(1);
+    }
+}
+
+.petkit-scrubber-hover-preview__img {
+    width: 100%;
+    height: 105px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    background: #000000;
+}
+
+.petkit-scrubber-hover-preview__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.petkit-scrubber-hover-preview__type {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.petkit-scrubber-hover-preview__time {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    font-family: ui-monospace, monospace;
+}
+
+.petkit-scrubber-hover-preview__title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.25;
+}
+
+.petkit-scrubber-hover-preview__meta {
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.petkit-scrubber-hover-preview__arrow {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: rgba(15, 23, 42, 0.96);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   7. Event Filmstrip / Mini Cards Carousel
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-filmstrip {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 1rem;
+    background: #090d16;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.petkit-scrubber-filmstrip-card {
+    flex-shrink: 0;
+    width: 140px;
+    height: 80px;
+    border-radius: 0.5rem;
+    background: #1e293b;
+    border: 2px solid transparent;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
+.petkit-scrubber-filmstrip-card:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.petkit-scrubber-filmstrip-card--active {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+    background: #273549;
+}
+
+.petkit-scrubber-filmstrip-card__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+    z-index: 1;
+}
+
+.petkit-scrubber-filmstrip-card__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.petkit-scrubber-filmstrip-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.petkit-scrubber-filmstrip-card__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--card-color, #60a5fa);
+}
+
+.petkit-scrubber-filmstrip-card__time {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    font-family: ui-monospace, monospace;
+}
+
+.petkit-scrubber-filmstrip-card__bottom {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   8. Collapsible Event Inspector / JSON Drawer
+   -------------------------------------------------------------------------- */
+.petkit-scrubber-inspector {
+    background: #0f172a;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1rem 1.25rem;
+    font-size: 0.8125rem;
+}
+
+.petkit-scrubber-inspector pre {
+    background: #020617;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    color: #38bdf8;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.petkit-filter-btn-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.375rem;
+    padding: 0.125rem 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--primary-500) 20%, transparent);
+    color: var(--primary-500);
+}

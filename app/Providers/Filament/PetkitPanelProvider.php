@@ -26,11 +26,13 @@ class PetkitPanelProvider extends PanelProvider
         'css/petkit-activity-detail.css',
         'css/petkit-event-counts.css',
         'css/petkit-players.css',
+        'css/petkit-timeline-scrubber.css',
     ];
     private const ACTIVITIES_SCRIPTS = [
         'js/petkit-timelapse-player.js',
         'js/petkit-video-reel-player.js',
         'js/petkit-activities.js',
+        'js/petkit-timeline-scrubber.js',
     ];
 
     public function panel(Panel $panel): Panel

@@ -14,6 +14,8 @@ class History extends Model
 {
     public const DATETIME_FORMAT = 'LL · LT';
     public const DATETIME_WITH_SECONDS_FORMAT = 'LL · LTS';
+    public const TIME_WITH_SECONDS_FORMAT = 'LTS';
+    public const DATE_FORMAT = 'LL';
 
     protected $table = 'history';
     protected $fillable = ['messageId', 'message', 'pet_id', 'device_id', 'parameters', 'type'];

@@ -34,7 +34,25 @@
         </x-slot>
 
         {{-- Shared Activity Filter Toolbar --}}
-        @include('filament.pages.activities.filter-toolbar')
+        @component('filament.pages.activities.filter-toolbar')
+            {{-- Open in Timeline Scrubber Page Button --}}
+            <a
+                href="{{ $this->getTimelinePageUrl() }}"
+                style="margin-left:auto;"
+            >
+                <x-filament::button
+                    color="gray"
+                    size="sm"
+                    icon="heroicon-m-film"
+                    icon-position="after"
+                >
+                    {{ __('Open in Timeline Scrubber') }}
+                    <span class="petkit-filter-btn-badge">
+                        {{ $this->getFilteredActivitiesCount() }}
+                    </span>
+                </x-filament::button>
+            </a>
+        @endcomponent
 
         {{-- Active Filter Chips --}}
         @if ($this->hasActiveFilters())
